@@ -22,6 +22,9 @@ void search(int *arr, int start, int end, const char *who) {
 }
 
 int main() {
+
+    // Question 2a) -- Fonctionnels 
+
     int *arr = malloc(SIZE * sizeof(int));
     if (arr == NULL) {
         perror("Erreur d'allocation de mémoire");
