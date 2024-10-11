@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1727948661 source:/home/IUTBAY/mbourciez/Bureau/R3.05/TP/main.c
+	<stdlib.h>
+	<unistd.h>
+	<stdbool.h>
+	<pthread.h>
+
