@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include <signal.h>
+#include <sys/types.h>
 
 
 
