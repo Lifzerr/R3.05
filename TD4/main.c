@@ -7,20 +7,26 @@
 #include <sys/wait.h>
 
 #define SIZE 1000000  // Taille du tableau
-#define TARGET 123456 // Élément à rechercher
+#define TARGET 995256 // Élément à rechercher
 
 // Variable globale pour le fils afin de savoir s'il doit interrompre sa recherche
 volatile sig_atomic_t arret_fils = 0;
+volatile sig_atomic_t arret_pere = 0;
 
 // Gestionnaire du signal SIGUSR1
 void handle_sigusr1(int sig) {
     arret_fils = 1;  // Le signal indique d'arrêter la recherche
 }
 
+// Gesttionnaire du signal SIGUSR2
+void handle_sigusr2(int sig) {
+    arret_pere = 1;  // Le signal indique d'arrêter la recherche
+}
+
 // Fonction de recherche utilisée par le fils
 bool search_fils(int *arr, int start, int end, const char *who) {
     for (int i = start; i < end; i++) {
-        if (arret_fils) {
+        if (arret_fils || arret_pere) {
             // Si le signal a été reçu, le fils arrête la recherche
             printf("%s a été interrompu\n", who);
             return false;
@@ -34,15 +40,6 @@ bool search_fils(int *arr, int start, int end, const char *who) {
     return false;
 }
 
-bool search_pere(int *arr, int start, int end, const char *who) {
-    for (int i = start; i < end; i++) {
-        if (arr[i] == TARGET) {
-            printf("%s a trouvé en position : %d\n", who, i);
-            return true;
-        }
-    }
-    return false;
-}
 
 int main() {
     int *arr = malloc(SIZE * sizeof(int));
@@ -77,7 +74,9 @@ int main() {
         }
     } else {
         // Code du processus père : il explore la 1ère moitié du tableau
-        bool pere_trouve = search_pere(arr, 0, SIZE / 2, "Le père");
+        signal(SIGUSR2, handle_sigusr2);
+
+        bool pere_trouve = search_fils(arr, 0, SIZE / 2, "Le père");
 
         if (pere_trouve) {
             // Si le père trouve l'élément, il envoie SIGUSR1 au fils
