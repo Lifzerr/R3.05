@@ -29,12 +29,10 @@ int main() {
 
         // V
 
-        while ((clavier = getchar()) != '$') {
+        while ((clavier = getchar()) != EOF) {
             write(fd[1], &clavier, sizeof(char)); // Écrit le caractère dans le tube
         }
 
-        // Envoyer le caractère de terminaison '$' au processus fils
-        write(fd[1], &clavier, sizeof(char));
         close(fd[1]); // Ferme l'écriture du tube
         wait(NULL);   // Attend la fin du processus fils
 
