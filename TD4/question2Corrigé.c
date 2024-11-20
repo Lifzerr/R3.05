@@ -6,11 +6,8 @@
 // Structure sigaction
 struct sigaction sig_abandon;
 
-
-
-
 void msgAlarm(int sig){
-    printf("\nAlors ça vient ?\n");$
+    printf("\nAlors ça vient ?\n");
     // odification du signal 
     sig_abandon.sa_handler = msgAlarm2;
     sig_abandon.sa_flags = SA_RESETHAND;

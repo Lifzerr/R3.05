@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdbool.h>
 #include <ctype.h>
 #include <sys/wait.h>
 
@@ -25,14 +24,13 @@ int main() {
     
     if (pid > 0) { // Processus père
         close(fd[0]); // Ferme la lecture du tube
-        printf("Entrez des caractères (terminez avec '$') :\n");
+        printf("Lecture du fichier en cours...\n");
 
-        // V
-
-        while ((clavier = getchar()) != EOF) {
+        while ((clavier = getchar()) != EOF) { 
             write(fd[1], &clavier, sizeof(char)); // Écrit le caractère dans le tube
         }
 
+        printf("Fin de transfert\n");
         close(fd[1]); // Ferme l'écriture du tube
         wait(NULL);   // Attend la fin du processus fils
 
@@ -40,10 +38,10 @@ int main() {
         close(fd[1]); // Ferme l'écriture du tube
 
         while (read(fd[0], &ecran, sizeof(char)) > 0) {
-            if (ecran == '$') break; // Sortie si le caractère '$' est lu
-            ecranMaj = toupper(ecran);      // Convertit en majuscule
+            ecranMaj = toupper(ecran); // Convertit en majuscule
             printf("Caractère reçu en majuscule : %c\n", ecranMaj);
         }
+
         close(fd[0]); // Ferme la lecture du tube
     }
 
