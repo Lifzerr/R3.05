@@ -35,15 +35,14 @@ int main() {
 
         printf("Fils : en attente du signal SIGUSR1...\n");
 
-        // Boucle tant que 'attente' est à 0
+        // Boucle d'attente
         while (!attente) {
-            // Boucle vide
         }
 
         printf("Fils : signal reçu, fin du processus fils.\n");
         exit(EXIT_SUCCESS);
     } else {
-        // Code du processus père
+        // Processus père
         printf("Père : PID du fils = %d\n", pid);
 
         // Attendre 5 secondes

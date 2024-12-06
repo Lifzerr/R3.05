@@ -29,7 +29,7 @@ int main(){
     struct sigaction sig_relance, ancien;
     sig_relance.sa_handler = msgAlarm;
     sig_relance.sa_flags = SA_RESTART;
-    sigemptyset(&sig_relance.sa_mask);
+    sigemptyset(&sig_relance.sa_mask);  
 
     // Créer le signal
     sigaction(SIGALRM, &sig_relance, &ancien);
