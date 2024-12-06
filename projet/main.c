@@ -10,18 +10,19 @@ pthread_mutex_t mutexPersonnes = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexTps = PTHREAD_MUTEX_INITIALIZER;
 int nbPersonnes;
 int nbSec = 0;
+int MAX_SEC;
 
 // Fonction exécutée par chaque thread
-void* travail() {
+void* travail(void* arg) {
     // Obtenir un ID unique pour le thread (facultatif ici)
     pthread_t id = pthread_self();
+
+    // Récupérer le temps maximal d'attente
+    int MAX_SEC = *((int*) arg);
 
     // Simuler un délai avant d'arriver
     sleep(2);
     printf("Je suis là (Thread %lu)\n", id);
-
-    // Définir un temps maximal aléatoire pour ce thread
-    const int MAX_SEC = rand() % 10 + 1;
 
     // Mettre à jour le nombre de threads présents
     pthread_mutex_lock(&mutexPersonnes);
@@ -47,6 +48,7 @@ void* travail() {
         pthread_mutex_lock(&mutexPersonnes);
         if (nbPersonnes == X) {
             pthread_mutex_unlock(&mutexPersonnes);
+            printf("Thread %lu : Tout le monde est là !\n", id);
             break;
         }
         pthread_mutex_unlock(&mutexPersonnes);
@@ -71,10 +73,14 @@ int main(void) {
     // Création du tableau de threads
     pthread_t threads[X];
 
+    // Définir un temps maximal aléatoire pour ce thread
+    MAX_SEC = 5 + rand() % 5 + 1;
+    printf("Temps d'attente maximal : %d secondes\n", MAX_SEC);
+
     // Créer les threads
     pthread_attr_init(&attr);
     for (int i = 0; i < X; i++) {
-        pthread_create(&threads[i], &attr, travail, NULL);
+        pthread_create(&threads[i], NULL, travail, &MAX_SEC);
     }
 
     // Attendre la terminaison de tous les threads
